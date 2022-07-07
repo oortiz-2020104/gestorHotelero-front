@@ -5,19 +5,33 @@
     <div class="w3-display-middle">
         <h1 id="homeHeader" class="w3-jumbo w3-animate-top">Gestor hotelero</h1>
         <hr class="w3-border-green" style="margin: auto;">
-        <p class="w3-large w3-center pt-2">
+        <p class="w3-large w3-center pt-2" *ngIf="!token">
             <button routerLink="/login" type="button" class="btn btn-lg btn-outline-light m-1"
                 style="width: 150px;">Inicia sesión</button>
             <button routerLink="/register" type="button" class="btn btn-lg btn-outline-light m-1"
                 style="width: 150px;">Registrarse</button>
         </p>
-        <!-- <p class="w3-large w3-center pt-2" *ngIf="token && companyData.role == 'ADMIN'">
-            <button routerLink="/admin/users" type="button" class="btn btn-lg btn-outline-light me-2"
-                style="width: 225px;">Administrar empresas</button>
+
+        <p class="w3-large w3-center pt-2" *ngIf="token && userData.role == 'CLIENT'">
+            <button routerLink="" type="button" class="btn btn-lg btn-outline-light m-1"
+                style="width: 150px;">Hoteles</button>
+            <button routerLink="" type="button" class="btn btn-lg btn-outline-light m-1" style="width: 175px;">Mi
+                reservación</button>
         </p>
-        <p class="w3-large w3-center pt-2" *ngIf="token && companyData.role == 'COMPANY'">
-            <button routerLink="/controlPanel" type="button" class="btn btn-lg btn-outline-light me-2"
-                style="width: 200px;">Panel de control</button>
-        </p> -->
+
+        <p class="w3-large w3-center pt-2" *ngIf="token && userData.role == 'HOTELADMIN'">
+            <button routerLink="/controlPanelHotels" type="button" class="btn btn-lg btn-outline-light m-1"
+                style="width: 200px;">Administrar hoteles</button>
+            <button routerLink="" type="button" class="btn btn-lg btn-outline-light m-1"
+                style="width: 150px;">Reservaciones</button>
+        </p>
+
+        <p class="w3-large w3-center pt-2" *ngIf="token && userData.role == 'ADMIN'">
+            <button routerLink="" type="button" class="btn btn-lg btn-outline-light m-1"
+                style="width: 150px;">Administrar hoteles</button>
+            <button routerLink="" type="button" class="btn btn-lg btn-outline-light m-1"
+                style="width: 150px;">Administrar usuarios</button>
+        </p>
+
     </div>
 </div>

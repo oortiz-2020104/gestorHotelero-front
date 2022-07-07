@@ -12,6 +12,8 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { UsersComponent } from './components/admin/users/users.component';
 import { HotelsComponent } from './components/admin/hotels/hotels.component';
+import { ControlPanelComponent } from './components/hotelAdmin/control-panel/control-panel.component';
+import { SearchHotelPipe } from './pipes/hotel/search-hotel.pipe';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { HotelsComponent } from './components/admin/hotels/hotels.component';
     LoginComponent,
     HomeComponent,
     UsersComponent,
-    HotelsComponent
+    HotelsComponent,
+    ControlPanelComponent,
+    SearchHotelPipe
   ],
   imports: [
     BrowserModule,

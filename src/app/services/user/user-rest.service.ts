@@ -21,4 +21,26 @@ export class UserRestService {
       headers: this.httpOptions,
     });
   }
+
+  getToken() {
+    let globalToken = localStorage.getItem('token');
+    let token;
+    if (globalToken != undefined) {
+      token = globalToken;
+    } else {
+      token = '';
+    }
+    return token;
+  }
+
+  getIdentity() {
+    let globalIdentity = localStorage.getItem('identity');
+    let identity;
+    if (globalIdentity != undefined) {
+      identity = JSON.parse(globalIdentity);
+    } else {
+      identity = '';
+    }
+    return identity;
+  }
 }
