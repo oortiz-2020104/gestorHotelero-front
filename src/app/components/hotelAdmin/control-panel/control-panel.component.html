@@ -1,8 +1,8 @@
 <app-navbar></app-navbar>
 
 <div class="text-center m-3">
-    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAddHotel">Agregar hotel</button>
-    <div class="input-group mx-auto w-25 mt-2 ">
+    <button class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#modalAddHotel">Agregar hotel</button>
+    <div class="input-group mx-auto  m-1" style="min-width: 115.7px; width: 15vw;">
         <input [(ngModel)]="searchHotel" type="text" class="form-control" placeholder="Buscar hotel"
             aria-describedby="btnSearch">
     </div>
@@ -28,7 +28,8 @@
                     <hr>
 
                     <div class="d-flex justify-content-center flex-wrap m-1">
-                        <button class="btn btn-primary m-1 px-4">Habitaciones</button>
+                        <button (click)="getRooms(hotel._id)" class="btn btn-primary m-1 px-4" data-bs-toggle="modal"
+                            data-bs-target="#modalGetRooms">Habitaciones</button>
                         <button class="btn btn-primary m-1 px-4">Servicios</button>
                         <button class="btn btn-primary m-1 px-4">Eventos</button>
                         <button class="btn btn-primary m-1 px-4">Cambiar foto</button>
@@ -87,23 +88,185 @@
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        <form (ngSubmit)="updateHotel()" *ngIf="hotelGetId">
+        <form (ngSubmit)="updateHotel()" *ngIf="hotelGetData">
             <div class="mb-3">
                 <label class="form-label">Nombre</label>
-                <input [(ngModel)]="hotelGetId.name" name="name" type="text" class="form-control">
+                <input [(ngModel)]="hotelGetData.name" name="name" type="text" class="form-control">
             </div>
             <div class="mb-3">
-                <label class="form-label">Tipo de empresa</label>
-                <input [(ngModel)]="hotelGetId.address" name="address" type="text" class="form-control">
+                <label class="form-label">Dirección</label>
+                <input [(ngModel)]="hotelGetData.address" name="address" type="text" class="form-control">
             </div>
             <div class="mb-3">
-                <label class="form-label">Nombre de usuario</label>
-                <input [(ngModel)]="hotelGetId.phone" name="phone" type="text" class="form-control">
+                <label class="form-label">Teléfono</label>
+                <input [(ngModel)]="hotelGetData.phone" name="phone" type="text" class="form-control">
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer px-0">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Descartar cambios</button>
                 <button type="submit" class="btn btn-primary" data-bs-dismiss="offcanvas">Actualizar cambios</button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- Modal get rooms -->
+<div class="modal fade" id="modalGetRooms" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Habitaciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- <div class="row justify-content-center px-4">
+                    <div *ngFor="let room of rooms" class="card m-2" style="width: 18rem;">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ room.name }}</h4>
+                            <h5 class="card-title">Q{{ room.price }} por día</h5>
+                            <p class="card-subtitle mb-2">{{ room.description }}</p>
+
+                            <div class="mb-3 d-flex">
+                                <button class="btn btn-success flex-grow-1">Ver</button>
+                            </div>
+
+                            <div class="btn-group d-flex" role="group">
+                                <button class="btn btn-warning flex-grow-1" data-bs-toggle="offcanvas"
+                                    data-bs-target="#offcanvasGetLeague"
+                                    aria-controls="offcanvasGetLeague">Editar</button>
+                                <button class="btn btn-danger">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="text-center">
+                    <button class="btn btn-success m-2" data-bs-toggle="modal" data-bs-target="#modalAddRoom">
+                        Agregar habitación
+                    </button>
+                </div>
+
+                <hr>
+
+                <div class="table-responsive-xxl">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Disponibilidad</th>
+                                <th scope="col">Fecha disponible</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let room of rooms">
+                                <th scope="row">{{ room.name }}</th>
+                                <td>{{ room.description }}</td>
+                                <td>Q{{ room.price }}</td>
+                                <td *ngIf="room.available == true" class="text-success">Disponible</td>
+                                <td *ngIf="room.available == false" class="text-danger">No disponible</td>
+                                <td>{{ room.dateAvailable }}</td>
+                                <td>
+                                    <button (click)="getRoom(room._id)" class="btn btn-warning m-1"
+                                        data-bs-toggle="modal" data-bs-target="#modalGetRoom"
+                                        aria-controls="modalGetRoom">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button (click)="deleteRoom(room._id)" class="btn btn-danger m-1">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal add room -->
+<div class="modal fade" id="modalAddRoom" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAddRoom">Agregar habitación</h5>
+                <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#modalGetRooms"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form #addRoomForm="ngForm" (ngSubmit)="addRoom(addRoomForm)">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input [(ngModel)]="room.name" name="name" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="descriptionTextArea">Descripción</label>
+                        <textarea [(ngModel)]="room.description" name="description" class="form-control"
+                            id="descriptionTextArea" style="height: 100px"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Precio</label>
+                        <input [(ngModel)]="room.price" name="price" type="number" class="form-control" min="0.01"
+                            step="0.1">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#modalGetRooms">Descartar</button>
+                        <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#modalGetRooms">Agregar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal get room -->
+<div class="modal fade" id="modalGetRoom" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalGetRoom">Editar habitación</h5>
+                <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#modalGetRooms"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="updateRoom()" *ngIf="roomGetData">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input [(ngModel)]="roomGetData.name" name="name" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <input [(ngModel)]="roomGetData.description" name="description" type="text"
+                            class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Precio</label>
+                        <input [(ngModel)]="roomGetData.price" name="price" type="number" class="form-control" min="1"
+                            step="1">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Disponibilidad</label>
+                        <select [(ngModel)]="roomGetData.available" name="available" class="form-select">
+                            <option value="true">Disponible</option>
+                            <option value="false">No disponible</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fecha disponible</label>
+                        <input [(ngModel)]="roomGetData.dateAvailable" name="dateAvailable" type="text"
+                            class="form-control">
+                    </div>
+                    <div class="modal-footer px-0">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#modalGetRooms">Descartar cambios</button>
+                        <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#modalGetRooms">Actualizar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>

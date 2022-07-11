@@ -35,9 +35,9 @@ export class RoomRestService {
     );
   }
 
-  updateHotel(params: {}, id: string) {
+  updateRoom(params: {}, idHotel: string, idRoom: string) {
     return this.http.put(
-      environment.baseUrl + 'hotel/updateHotel/' + id,
+      environment.baseUrl + 'room/updateRoom/' + idHotel + '/' + idRoom,
       params,
       {
         headers: this.httpOptions,
@@ -45,9 +45,12 @@ export class RoomRestService {
     );
   }
 
-  deleteHotel(id: string) {
-    return this.http.delete(environment.baseUrl + 'hotel/deleteHotel/' + id, {
-      headers: this.httpOptions,
-    });
+  deleteRoom(idHotel: string, idRoom: string) {
+    return this.http.delete(
+      environment.baseUrl + 'room/deleteRoom/' + idHotel + '/' + idRoom,
+      {
+        headers: this.httpOptions,
+      }
+    );
   }
 }
