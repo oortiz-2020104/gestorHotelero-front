@@ -16,6 +16,7 @@ import { ControlPanelComponent } from './components/hotelAdmin/control-panel/con
 import { SearchHotelPipe } from './pipes/hotel/search-hotel.pipe';
 import { SearchRoomPipe } from './pipes/room/search-room.pipe';
 import { SearchServicePipe } from './pipes/service/search-service.pipe';
+import { SearchEventPipe } from './pipes/event/search-event.pipe';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { SearchServicePipe } from './pipes/service/search-service.pipe';
     ControlPanelComponent,
     SearchHotelPipe,
     SearchRoomPipe,
-    SearchServicePipe
+    SearchServicePipe,
+    SearchEventPipe
   ],
   imports: [
     BrowserModule,

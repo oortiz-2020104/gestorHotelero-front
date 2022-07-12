@@ -14,37 +14,30 @@ export class EventRestService {
 
   constructor(private http: HttpClient, private userRest: UserRestService) {}
 
-  addService(params: {}) {
-    return this.http.post(environment.baseUrl + 'service/addService', params, {
+  addEvent(params: {}) {
+    return this.http.post(environment.baseUrl + 'event/addEvent', params, {
       headers: this.httpOptions,
     });
   }
 
-  getServices(idHotel: string) {
+  getEvents(idHotel: string) {
+    return this.http.get(environment.baseUrl + 'event/getEvents/' + idHotel, {
+      headers: this.httpOptions,
+    });
+  }
+
+  getEvent(idHotel: string, idEvent: string) {
     return this.http.get(
-      environment.baseUrl + 'service/getServices/' + idHotel,
+      environment.baseUrl + 'event/getEvent/' + idHotel + '/' + idEvent,
       {
         headers: this.httpOptions,
       }
     );
   }
 
-  getService(idHotel: string, idService: string) {
-    return this.http.get(
-      environment.baseUrl + 'service/getService/' + idHotel + '/' + idService,
-      {
-        headers: this.httpOptions,
-      }
-    );
-  }
-
-  updateService(params: {}, idHotel: string, idService: string) {
+  updateEvent(params: {}, idHotel: string, idEvent: string) {
     return this.http.put(
-      environment.baseUrl +
-        'service/updateService/' +
-        idHotel +
-        '/' +
-        idService,
+      environment.baseUrl + 'event/updateEvent/' + idHotel + '/' + idEvent,
       params,
       {
         headers: this.httpOptions,
@@ -52,13 +45,9 @@ export class EventRestService {
     );
   }
 
-  deleteService(idHotel: string, idService: string) {
+  deleteEvent(idHotel: string, idEvent: string) {
     return this.http.delete(
-      environment.baseUrl +
-        'service/deleteService/' +
-        idHotel +
-        '/' +
-        idService,
+      environment.baseUrl + 'event/deleteEvent/' + idHotel + '/' + idEvent,
       {
         headers: this.httpOptions,
       }

@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { HotelRestService } from 'src/app/services/hotel/hotel-rest.service';
 import { RoomRestService } from 'src/app/services/room/room-rest.service';
 import { ServiceRestService } from 'src/app/services/service/service-rest.service';
+import { EventRestService } from 'src/app/services/event/event-rest.service';
 import { HotelModel } from 'src/app/models/hotel.model';
 import { RoomModel } from 'src/app/models/room.model';
 import { ServiceModel } from 'src/app/models/service.model';
+import { EventModel } from 'src/app/models/event.model';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -13,27 +15,29 @@ import Swal from 'sweetalert2';
   styleUrls: ['./control-panel.component.css'],
 })
 export class ControlPanelComponent implements OnInit {
-  //* Hoteles ---------------------------------------------------------------------------------------
-
-  hotel: HotelModel;
-  hotels: any;
-  hotelGetData: any;
-  searchHotel: String = '';
-
   constructor(
     private hotelRest: HotelRestService,
     private roomRest: RoomRestService,
-    private serviceRest: ServiceRestService
+    private serviceRest: ServiceRestService,
+    private eventRest: EventRestService
   ) {
     this.hotel = new HotelModel('', '', '', '', '');
     this.room = new RoomModel('', '', '', '', 0, false, '');
     this.service = new ServiceModel('', '', '', '', 0);
+    this.event = new EventModel('', '', '', '', '', new Date());
   }
 
   ngOnInit(): void {
     this.getHotels();
     this.labelFilter = 'Habitaciones disponibles';
   }
+
+  //* Hoteles ---------------------------------------------------------------------------------------
+  searchHotel: String = '';
+
+  hotel: HotelModel;
+  hotels: any;
+  hotelGetData: any;
 
   addHotel(addHotelForm: any) {
     this.hotelRest.addHotel(this.hotel).subscribe({
@@ -277,7 +281,7 @@ export class ControlPanelComponent implements OnInit {
     });
   }
 
-  //* Habitaciones ---------------------------------------------------------------------------------------
+  //* Servicios ---------------------------------------------------------------------------------------
   searchService: String = '';
 
   service: ServiceModel;
@@ -333,7 +337,11 @@ export class ControlPanelComponent implements OnInit {
   updateService() {
     this.serviceGetData.hotel = undefined;
     this.serviceRest
-      .updateService(this.serviceGetData, this.hotelGetId, this.serviceGetData._id)
+      .updateService(
+        this.serviceGetData,
+        this.hotelGetId,
+        this.serviceGetData._id
+      )
       .subscribe({
         next: (res: any) => {
           Swal.fire({
@@ -371,6 +379,113 @@ export class ControlPanelComponent implements OnInit {
               title: res.message,
             });
             this.getServices(this.hotelGetId);
+          },
+          error: (err: any) => {
+            Swal.fire({
+              icon: 'warning',
+              title: err.error.message || err.error,
+            });
+          },
+        });
+      }
+    });
+  }
+
+  //* Servicios ---------------------------------------------------------------------------------------
+  searchEvent: String = '';
+
+  event: EventModel;
+  events: any;
+  eventGetData: any;
+
+  addEvent(addEventForm: any) {
+    this.event.hotel = this.hotelGetId;
+    this.eventRest.addEvent(this.event).subscribe({
+      next: (res: any) => {
+        Swal.fire({
+          icon: 'success',
+          title: res.message,
+        });
+        this.getEvents(this.hotelGetId);
+        addEventForm.reset();
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'warning',
+          title: err.error.message || err.error,
+        });
+      },
+    });
+  }
+
+  getEvents(idHotel: string) {
+    this.hotelGetId = idHotel;
+    this.eventRest.getEvents(idHotel).subscribe({
+      next: (res: any) => {
+        this.events = res.events;
+      },
+      error: (err: any) => {
+        console.log(err.error.message);
+      },
+    });
+  }
+
+  getEvent(idEvent: string) {
+    this.eventRest.getEvent(this.hotelGetId, idEvent).subscribe({
+      next: (res: any) => {
+        this.eventGetData = res.checkEventHotel;
+        console.log(this.eventGetData);
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'warning',
+          title: err.error.message || err.error,
+        });
+      },
+    });
+  }
+
+  updateEvent() {
+    this.eventGetData.hotel = undefined;
+    this.eventRest
+      .updateEvent(this.eventGetData, this.hotelGetId, this.eventGetData._id)
+      .subscribe({
+        next: (res: any) => {
+          Swal.fire({
+            icon: 'success',
+            title: res.message,
+          });
+          this.getHotels();
+          this.getEvents(this.hotelGetId);
+        },
+        error: (err) => {
+          Swal.fire({
+            icon: 'warning',
+            title: err.error.message || err.error,
+          });
+        },
+      });
+  }
+
+  deleteEvent(idEvent: string) {
+    Swal.fire({
+      title: '¿Estás seguro de eliminar esta habitación?',
+      text: '¡Esta acción no se puede revertir!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#aaa',
+      confirmButtonText: 'Sí, quiero eliminarlo',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.eventRest.deleteEvent(this.hotelGetId, idEvent).subscribe({
+          next: (res: any) => {
+            Swal.fire({
+              icon: 'success',
+              title: res.message,
+            });
+            this.getEvents(this.hotelGetId);
           },
           error: (err: any) => {
             Swal.fire({
