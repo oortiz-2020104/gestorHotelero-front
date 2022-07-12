@@ -34,6 +34,8 @@ export class ControlPanelComponent implements OnInit {
 
   //* Hoteles ---------------------------------------------------------------------------------------
   searchHotel: String = '';
+  hotelGetId: any;
+  filesToUpload: any;
 
   hotel: HotelModel;
   hotels: any;
@@ -137,8 +139,36 @@ export class ControlPanelComponent implements OnInit {
     });
   }
 
+  getIdHotel(idHotel: string) {
+    this.hotelGetId = idHotel;
+  }
+
+  filesChange(inputFile: any) {
+    this.filesToUpload = <Array<File>>inputFile.target.files;
+    console.log(this.filesToUpload);
+  }
+
+  uploadImage() {
+    this.hotelRest
+      .requestFiles(this.hotelGetId, this.filesToUpload, 'image')
+      .then((res: any) => {
+        let resClear = JSON.parse(res);
+        if (!resClear.error) {
+          Swal.fire({
+            icon: 'success',
+            title: resClear.message,
+          });
+          this.getHotels();
+        } else {
+          Swal.fire({
+            icon: 'success',
+            title: res,
+          });
+        }
+      });
+  }
+
   //* Habitaciones ---------------------------------------------------------------------------------------
-  hotelGetId: any;
   labelFilter: any;
   searchRoom: String = '';
 
