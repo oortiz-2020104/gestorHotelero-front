@@ -26,6 +26,24 @@ export class RoomRestService {
     });
   }
 
+  getRoomsAvailable(idHotel: string) {
+    return this.http.get(
+      environment.baseUrl + 'room/getRoomsAvailable/' + idHotel,
+      {
+        headers: this.httpOptions,
+      }
+    );
+  }
+
+  getRoomsNoAvailable(idHotel: string) {
+    return this.http.get(
+      environment.baseUrl + 'room/getRoomsNoAvailable/' + idHotel,
+      {
+        headers: this.httpOptions,
+      }
+    );
+  }
+
   getRoom(idHotel: string, idRoom: string) {
     return this.http.get(
       environment.baseUrl + 'room/getRoom/' + idHotel + '/' + idRoom,

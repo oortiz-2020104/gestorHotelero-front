@@ -8,8 +8,8 @@ export class SearchHotelPipe implements PipeTransform {
     if (searchHotel == undefined) {
       return hotels;
     } else {
-      return hotels.filter((product: any) => {
-        return product.name.toLowerCase().includes(searchHotel.toLowerCase());
+      return hotels.filter((hotel: any) => {
+        return hotel.name.toLowerCase().includes(searchHotel.toLowerCase());
       });
     }
   }

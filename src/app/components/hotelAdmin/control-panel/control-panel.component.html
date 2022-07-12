@@ -2,7 +2,7 @@
 
 <div class="text-center m-3">
     <button class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#modalAddHotel">Agregar hotel</button>
-    <div class="input-group mx-auto  m-1" style="min-width: 115.7px; width: 15vw;">
+    <div class="input-group mx-auto m-1" style="min-width: 115.7px; width: 15vw;">
         <input [(ngModel)]="searchHotel" type="text" class="form-control" placeholder="Buscar hotel"
             aria-describedby="btnSearch">
     </div>
@@ -21,25 +21,33 @@
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                    <h5 class="card-title h2">{{ hotel.name }}</h5>
-                    <p class="card-subtitle mt-2"> Teléfono: {{ hotel.phone }} </p>
-                    <p class="card-text">Dirección: {{ hotel.address }}</p>
+                    <h5 class="card-title h2 mb-0">{{ hotel.name }}</h5>
+                    <div class="card-subtitle mb-1 text-muted fst-italic">Veces reservado: {{ hotel.timesRequest }}</div>
+                    <div class="card-text"> Teléfono: {{ hotel.phone }}</div>
+                    <div class="card-text">Dirección: {{ hotel.address }}</div>
 
                     <hr>
 
                     <div class="d-flex justify-content-center flex-wrap m-1">
-                        <button (click)="getRooms(hotel._id)" class="btn btn-primary m-1 px-4" data-bs-toggle="modal"
-                            data-bs-target="#modalGetRooms">Habitaciones</button>
-                        <button class="btn btn-primary m-1 px-4">Servicios</button>
-                        <button class="btn btn-primary m-1 px-4">Eventos</button>
-                        <button class="btn btn-primary m-1 px-4">Cambiar foto</button>
+                        <button (click)="getRooms(hotel._id)" class="btn btn-primary m-1 px-4 btn-sm"
+                            data-bs-toggle="modal" data-bs-target="#modalGetRooms">Habitaciones</button>
+                        <button (click)="getServices(hotel._id)" class="btn btn-primary m-1 px-4 btn-sm"
+                            data-bs-toggle="modal" data-bs-target="#modalGetServices">Servicios</button>
+                        <button class="btn btn-primary m-1 px-4 btn-sm">Eventos</button>
+                        <button class="btn btn-primary m-1 px-4 btn-sm">Cambiar foto</button>
                     </div>
 
                     <div class="d-flex justify-content-center flex-wrap m-1">
-                        <button (click)="getHotel(hotel._id)" class="btn btn-warning m-1 px-4"
+                        <button class="btn btn-secondary m-1 px-4 btn-sm">Reservaciones</button>
+                        <button class="btn btn-secondary m-1 px-4 btn-sm">Facturas</button>
+                    </div>
+
+                    <div class="d-flex justify-content-center flex-wrap m-1">
+                        <button (click)="getHotel(hotel._id)" class="btn btn-warning m-1 px-4 btn-sm"
                             data-bs-toggle="offcanvas" data-bs-target="#offcanvasGetHotel"
                             aria-controls="offcanvasGetHotel">Editar</button>
-                        <button (click)="deleteHotel(hotel._id)" class="btn btn-danger m-1 px-4">Eliminar</button>
+                        <button (click)="deleteHotel(hotel._id)"
+                            class="btn btn-danger m-1 px-4 btn-sm">Eliminar</button>
                     </div>
                 </div>
 
@@ -139,9 +147,21 @@
                     </div>
                 </div> -->
                 <div class="text-center">
-                    <button class="btn btn-success m-2" data-bs-toggle="modal" data-bs-target="#modalAddRoom">
+                    <button class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#modalAddRoom">
                         Agregar habitación
                     </button>
+
+                    <br>
+
+                    <button class="btn btn-secondary m-1" (click)="toggleSearch()">
+                        {{ labelFilter }}
+                    </button>
+
+                    <div class="mx-auto m-1" style="min-width: 115.7px; width: 15vw;">
+                        <input [(ngModel)]="searchRoom" type="text" class="form-control"
+                            placeholder="Buscar habitación">
+
+                    </div>
                 </div>
 
                 <hr>
@@ -159,7 +179,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let room of rooms">
+                            <tr *ngFor="let room of rooms | searchRoom:searchRoom">
                                 <th scope="row">{{ room.name }}</th>
                                 <td>{{ room.description }}</td>
                                 <td>Q{{ room.price }}</td>
@@ -206,7 +226,7 @@
                             id="descriptionTextArea" style="height: 100px"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Precio</label>
+                        <label class="form-label">Precio por día</label>
                         <input [(ngModel)]="room.price" name="price" type="number" class="form-control" min="0.01"
                             step="0.1">
                     </div>
@@ -239,8 +259,8 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Descripción</label>
-                        <input [(ngModel)]="roomGetData.description" name="description" type="text"
-                            class="form-control">
+                        <textarea [(ngModel)]="roomGetData.description" name="description" class="form-control"
+                            id="descriptionTextArea" style="height: 100px"></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Precio</label>
@@ -264,6 +284,136 @@
                             data-bs-target="#modalGetRooms">Descartar cambios</button>
                         <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#modalGetRooms">Actualizar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal get services -->
+<div class="modal fade" id="modalGetServices" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Servicios</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <button class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#modalAddService">
+                        Agregar servicio
+                    </button>
+
+                    <div class="mx-auto m-1" style="min-width: 115.7px; width: 15vw;">
+                        <input [(ngModel)]="searchService" type="text" class="form-control"
+                            placeholder="Buscar servicio">
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="table-responsive-xxl">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let service of services | searchService:searchService">
+                                <th scope="row">{{ service.name }}</th>
+                                <td>{{ service.description }}</td>
+                                <td>Q{{ service.price }}</td>
+                                <td>
+                                    <button (click)="getService(service._id)" class="btn btn-warning m-1"
+                                        data-bs-toggle="modal" data-bs-target="#modalGetService"
+                                        aria-controls="modalGetService">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button (click)="deleteService(service._id)" class="btn btn-danger m-1">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal add service -->
+<div class="modal fade" id="modalAddService" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAddService">Agregar servicio</h5>
+                <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#modalGetServices"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form #addServiceForm="ngForm" (ngSubmit)="addService(addServiceForm)">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input [(ngModel)]="service.name" name="name" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="descriptionTextArea">Descripción</label>
+                        <textarea [(ngModel)]="service.description" name="description" class="form-control"
+                            id="descriptionTextArea" style="height: 100px"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Precio</label>
+                        <input [(ngModel)]="service.price" name="price" type="number" class="form-control" min="0.01"
+                            step="0.1">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#modalGetServices">Descartar</button>
+                        <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#modalGetServices">Agregar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal get service -->
+<div class="modal fade" id="modalGetService" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalGetRoom">Editar servicio</h5>
+                <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#modalGetServices"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="updateService()" *ngIf="serviceGetData">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input [(ngModel)]="serviceGetData.name" name="name" type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <textarea [(ngModel)]="serviceGetData.description" name="description" class="form-control"
+                            id="descriptionTextArea" style="height: 100px"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Precio</label>
+                        <input [(ngModel)]="serviceGetData.price" name="price" type="number" class="form-control"
+                            min="1" step="1">
+                    </div>
+                    <div class="modal-footer px-0">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#modalGetServices">Descartar cambios</button>
+                        <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#modalGetServices">Actualizar cambios</button>
                     </div>
                 </form>
             </div>

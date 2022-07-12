@@ -6,7 +6,7 @@ import { UserRestService } from '../user/user-rest.service';
 @Injectable({
   providedIn: 'root',
 })
-export class ServiceRestService {
+export class EventRestService {
   httpOptions = new HttpHeaders({
     'Content-Type': 'application/json',
     Authorization: this.userRest.getToken(),

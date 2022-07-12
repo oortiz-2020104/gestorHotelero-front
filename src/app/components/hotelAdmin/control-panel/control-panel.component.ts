@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HotelRestService } from 'src/app/services/hotel/hotel-rest.service';
 import { RoomRestService } from 'src/app/services/room/room-rest.service';
+import { ServiceRestService } from 'src/app/services/service/service-rest.service';
 import { HotelModel } from 'src/app/models/hotel.model';
 import { RoomModel } from 'src/app/models/room.model';
+import { ServiceModel } from 'src/app/models/service.model';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -20,14 +22,17 @@ export class ControlPanelComponent implements OnInit {
 
   constructor(
     private hotelRest: HotelRestService,
-    private roomRest: RoomRestService
+    private roomRest: RoomRestService,
+    private serviceRest: ServiceRestService
   ) {
     this.hotel = new HotelModel('', '', '', '', '');
     this.room = new RoomModel('', '', '', '', 0, false, '');
+    this.service = new ServiceModel('', '', '', '', 0);
   }
 
   ngOnInit(): void {
     this.getHotels();
+    this.labelFilter = 'Habitaciones disponibles';
   }
 
   addHotel(addHotelForm: any) {
@@ -103,8 +108,8 @@ export class ControlPanelComponent implements OnInit {
       text: '¡Esta acción no se puede revertir!',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#aaa',
       confirmButtonText: 'Sí, quiero eliminarlo',
       cancelButtonText: 'Cancelar',
     }).then((result) => {
@@ -130,10 +135,25 @@ export class ControlPanelComponent implements OnInit {
 
   //* Habitaciones ---------------------------------------------------------------------------------------
   hotelGetId: any;
+  labelFilter: any;
+  searchRoom: String = '';
 
   room: RoomModel;
   rooms: any;
   roomGetData: any;
+
+  toggleSearch() {
+    if (this.labelFilter == 'Habitaciones disponibles') {
+      this.getRoomsAvailable();
+      this.labelFilter = 'Habitaciones no disponibles';
+    } else if (this.labelFilter == 'Habitaciones no disponibles') {
+      this.getRoomsNoAvailable();
+      this.labelFilter = 'Todas las habitaciones';
+    } else if (this.labelFilter == 'Todas las habitaciones') {
+      this.getRooms(this.hotelGetId);
+      this.labelFilter = 'Habitaciones disponibles';
+    }
+  }
 
   addRoom(addRoomForm: any) {
     this.room.hotel = this.hotelGetId;
@@ -157,7 +177,30 @@ export class ControlPanelComponent implements OnInit {
 
   getRooms(idHotel: string) {
     this.hotelGetId = idHotel;
+    this.labelFilter = 'Habitaciones disponibles';
     this.roomRest.getRooms(idHotel).subscribe({
+      next: (res: any) => {
+        this.rooms = res.rooms;
+      },
+      error: (err: any) => {
+        console.log(err.error.message);
+      },
+    });
+  }
+
+  getRoomsAvailable() {
+    this.roomRest.getRoomsAvailable(this.hotelGetId).subscribe({
+      next: (res: any) => {
+        this.rooms = res.rooms;
+      },
+      error: (err: any) => {
+        console.log(err.error.message);
+      },
+    });
+  }
+
+  getRoomsNoAvailable() {
+    this.roomRest.getRoomsNoAvailable(this.hotelGetId).subscribe({
       next: (res: any) => {
         this.rooms = res.rooms;
       },
@@ -171,7 +214,6 @@ export class ControlPanelComponent implements OnInit {
     this.roomRest.getRoom(this.hotelGetId, idRoom).subscribe({
       next: (res: any) => {
         this.roomGetData = res.checkRoomHotel;
-        console.log(this.roomGetData);
       },
       error: (err) => {
         Swal.fire({
@@ -210,8 +252,8 @@ export class ControlPanelComponent implements OnInit {
       text: '¡Esta acción no se puede revertir!',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#aaa',
       confirmButtonText: 'Sí, quiero eliminarlo',
       cancelButtonText: 'Cancelar',
     }).then((result) => {
@@ -223,6 +265,112 @@ export class ControlPanelComponent implements OnInit {
               title: res.message,
             });
             this.getRooms(this.hotelGetId);
+          },
+          error: (err: any) => {
+            Swal.fire({
+              icon: 'warning',
+              title: err.error.message || err.error,
+            });
+          },
+        });
+      }
+    });
+  }
+
+  //* Habitaciones ---------------------------------------------------------------------------------------
+  searchService: String = '';
+
+  service: ServiceModel;
+  services: any;
+  serviceGetData: any;
+
+  addService(addServiceForm: any) {
+    this.service.hotel = this.hotelGetId;
+    this.serviceRest.addService(this.service).subscribe({
+      next: (res: any) => {
+        Swal.fire({
+          icon: 'success',
+          title: res.message,
+        });
+        this.getServices(this.hotelGetId);
+        addServiceForm.reset();
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'warning',
+          title: err.error.message || err.error,
+        });
+      },
+    });
+  }
+
+  getServices(idHotel: string) {
+    this.hotelGetId = idHotel;
+    this.serviceRest.getServices(idHotel).subscribe({
+      next: (res: any) => {
+        this.services = res.services;
+      },
+      error: (err: any) => {
+        console.log(err.error.message);
+      },
+    });
+  }
+
+  getService(idService: string) {
+    this.serviceRest.getService(this.hotelGetId, idService).subscribe({
+      next: (res: any) => {
+        this.serviceGetData = res.checkServiceHotel;
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'warning',
+          title: err.error.message || err.error,
+        });
+      },
+    });
+  }
+
+  updateService() {
+    this.serviceGetData.hotel = undefined;
+    this.serviceRest
+      .updateService(this.serviceGetData, this.hotelGetId, this.serviceGetData._id)
+      .subscribe({
+        next: (res: any) => {
+          Swal.fire({
+            icon: 'success',
+            title: res.message,
+          });
+          this.getHotels();
+          this.getServices(this.hotelGetId);
+        },
+        error: (err) => {
+          Swal.fire({
+            icon: 'warning',
+            title: err.error.message || err.error,
+          });
+        },
+      });
+  }
+
+  deleteService(idService: string) {
+    Swal.fire({
+      title: '¿Estás seguro de eliminar esta habitación?',
+      text: '¡Esta acción no se puede revertir!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#aaa',
+      confirmButtonText: 'Sí, quiero eliminarlo',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.serviceRest.deleteService(this.hotelGetId, idService).subscribe({
+          next: (res: any) => {
+            Swal.fire({
+              icon: 'success',
+              title: res.message,
+            });
+            this.getServices(this.hotelGetId);
           },
           error: (err: any) => {
             Swal.fire({
