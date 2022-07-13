@@ -1,6 +1,5 @@
 <app-navbar></app-navbar>
 
-
 <div class="bgimg w3-display-container w3-animate-opacity w3-text-white" style="margin-top: -53px;">
     <div class="w3-display-middle">
         <h1 id="homeHeader" class="w3-jumbo w3-animate-top">Gestor hotelero</h1>
@@ -21,16 +20,14 @@
 
         <p class="w3-large w3-center pt-2" *ngIf="token && userData.role == 'HOTELADMIN'">
             <button routerLink="/controlPanelHotels" type="button" class="btn btn-lg btn-outline-light m-1"
-                style="width: 200px;">Administrar hoteles</button>
-            <button routerLink="" type="button" class="btn btn-lg btn-outline-light m-1"
-                style="width: 150px;">Reservaciones</button>
+                style="width: 200px;">Panel de control</button>
         </p>
 
         <p class="w3-large w3-center pt-2" *ngIf="token && userData.role == 'ADMIN'">
-            <button routerLink="" type="button" class="btn btn-lg btn-outline-light m-1"
-                style="width: 150px;">Administrar hoteles</button>
-            <button routerLink="" type="button" class="btn btn-lg btn-outline-light m-1"
+            <button routerLink="/admin/users" type="button" class="btn btn-lg btn-outline-light m-1"
                 style="width: 150px;">Administrar usuarios</button>
+            <button routerLink="/admin/hotels" type="button" class="btn btn-lg btn-outline-light m-1"
+                style="width: 150px;">Administrar hoteles</button>
         </p>
 
     </div>

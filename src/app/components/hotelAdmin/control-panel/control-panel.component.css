@@ -2,6 +2,7 @@
     width: 100%;
     height: auto;
 }
+
 @supports(object-fit: cover) {
     .img-fluid {
         height: 100%;

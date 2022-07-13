@@ -22,14 +22,14 @@
                 </li>
 
                 <li class="nav-item" *ngIf="token && userData.role == 'ADMIN'">
-                    <a class="nav-link" routerLink="">Administrar usuarios</a>
+                    <a class="nav-link" routerLink="/admin/users">Administrar usuarios</a>
                 </li>
                 <li class="nav-item" *ngIf="token && userData.role == 'ADMIN'">
-                    <a class="nav-link" routerLink="">Administrar hoteles</a>
+                    <a class="nav-link" routerLink="/admin/hotels">Administrar hoteles</a>
                 </li>
 
                 <li class="nav-item" *ngIf="token && userData.role == 'HOTELADMIN'">
-                    <a class="nav-link" routerLink="">Panel de control</a>
+                    <a class="nav-link" routerLink="/controlPanelHotels">Panel de control</a>
                 </li>
             </ul>
 
@@ -46,9 +46,9 @@
                         {{ userData.name + ' ' + userData.surname }}
                         <img class="ms-1 img-profile" *ngIf="userImage" crossorigin="anonymous" src="{{ uri }}">
                     </a>
-                    
+
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" routerLink="">Mi perfil</a></li>
+                        <li><a class="dropdown-item" routerLink="/myProfile">Mi perfil</a></li>
                         <li><a class="dropdown-item" href="" (click)="logOut()">Cerrar Sesión</a></li>
                         <li>
                             <hr class="dropdown-divider">

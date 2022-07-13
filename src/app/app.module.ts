@@ -17,6 +17,8 @@ import { SearchHotelPipe } from './pipes/hotel/search-hotel.pipe';
 import { SearchRoomPipe } from './pipes/room/search-room.pipe';
 import { SearchServicePipe } from './pipes/service/search-service.pipe';
 import { SearchEventPipe } from './pipes/event/search-event.pipe';
+import { SearchUserPipe } from './pipes/user/search-user.pipe';
+import { MyProfileComponent } from './components/my-profile/my-profile.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { SearchEventPipe } from './pipes/event/search-event.pipe';
     SearchHotelPipe,
     SearchRoomPipe,
     SearchServicePipe,
-    SearchEventPipe
+    SearchEventPipe,
+    SearchUserPipe,
+    MyProfileComponent
   ],
   imports: [
     BrowserModule,

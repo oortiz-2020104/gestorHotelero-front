@@ -392,7 +392,7 @@ export class ControlPanelComponent implements OnInit {
 
   deleteService(idService: string) {
     Swal.fire({
-      title: '¿Estás seguro de eliminar esta habitación?',
+      title: '¿Estás seguro de eliminar este servicio?',
       text: '¡Esta acción no se puede revertir!',
       icon: 'warning',
       showCancelButton: true,
@@ -499,7 +499,7 @@ export class ControlPanelComponent implements OnInit {
 
   deleteEvent(idEvent: string) {
     Swal.fire({
-      title: '¿Estás seguro de eliminar esta habitación?',
+      title: '¿Estás seguro de eliminar este evento?',
       text: '¡Esta acción no se puede revertir!',
       icon: 'warning',
       showCancelButton: true,
