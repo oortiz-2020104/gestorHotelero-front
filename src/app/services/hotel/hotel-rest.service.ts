@@ -14,6 +14,52 @@ export class HotelRestService {
 
   constructor(private http: HttpClient, private userRest: UserRestService) {}
 
+  //* Administrador ---------------------------------------------------------------------------------------
+  addHotelOnlyAdmin(params: {}) {
+    return this.http.post(
+      environment.baseUrl + 'hotel/addHotel_OnlyAdmin',
+      params,
+      {
+        headers: this.httpOptions,
+      }
+    );
+  }
+
+  getHotelsOnlyAdmin() {
+    return this.http.get(environment.baseUrl + 'hotel/getHotels_OnlyAdmin', {
+      headers: this.httpOptions,
+    });
+  }
+
+  getHotelOnlyAdmin(id: string) {
+    return this.http.get(
+      environment.baseUrl + 'hotel/getHotel_OnlyAdmin/' + id,
+      {
+        headers: this.httpOptions,
+      }
+    );
+  }
+
+  updateHotelOnlyAdmin(params: {}, id: string) {
+    return this.http.put(
+      environment.baseUrl + 'hotel/updateHotel_OnlyAdmin/' + id,
+      params,
+      {
+        headers: this.httpOptions,
+      }
+    );
+  }
+
+  deleteHotelOnlyAdmin(id: string) {
+    return this.http.delete(
+      environment.baseUrl + 'hotel/deleteHotel_OnlyAdmin/' + id,
+      {
+        headers: this.httpOptions,
+      }
+    );
+  }
+
+  //* Administrador del hotel ---------------------------------------------------------------------------------------
   addHotel(params: {}) {
     return this.http.post(environment.baseUrl + 'hotel/addHotel', params, {
       headers: this.httpOptions,

@@ -99,6 +99,15 @@ export class UserRestService {
     });
   }
 
+  getUsersHotelAdmin() {
+    return this.http.get(environment.baseUrl + 'user/getUsersHotelAdmin', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: this.getToken(),
+      },
+    });
+  }
+
   getUserAdmin(id: string) {
     return this.http.get(environment.baseUrl + 'user/getUser/' + id, {
       headers: {

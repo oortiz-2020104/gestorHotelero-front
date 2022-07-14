@@ -93,21 +93,34 @@ export class UsersComponent implements OnInit {
   }
 
   deleteUserAdmin(id: string) {
-    this.userRest.deleteUserAdmin(id).subscribe({
-      next: (res: any) => {
-        Swal.fire({
-          icon: 'success',
-          title: res.message,
-        });
+    Swal.fire({
+      title: '¿Estás seguro de eliminar este hotel?',
+      text: '¡Esta acción no se puede revertir!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#aaa',
+      confirmButtonText: 'Sí, quiero eliminarlo',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.userRest.deleteUserAdmin(id).subscribe({
+          next: (res: any) => {
+            Swal.fire({
+              icon: 'success',
+              title: res.message,
+            });
 
-        this.getUsersAdmin();
-      },
-      error: (err: any) => {
-        Swal.fire({
-          icon: 'warning',
-          title: err.error.message || err.error,
+            this.getUsersAdmin();
+          },
+          error: (err: any) => {
+            Swal.fire({
+              icon: 'warning',
+              title: err.error.message || err.error,
+            });
+          },
         });
-      },
+      }
     });
   }
 }
