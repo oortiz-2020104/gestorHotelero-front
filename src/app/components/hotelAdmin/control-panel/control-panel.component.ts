@@ -32,7 +32,11 @@ export class ControlPanelComponent implements OnInit {
   ngOnInit(): void {
     this.getHotels();
     this.labelFilter = 'Habitaciones disponibles';
+
+    this.today = new Date().toISOString().split('T')[0];
   }
+
+  today: any;
 
   //* Hoteles ---------------------------------------------------------------------------------------
   searchHotel: String = '';
@@ -423,7 +427,7 @@ export class ControlPanelComponent implements OnInit {
     });
   }
 
-  //* Servicios ---------------------------------------------------------------------------------------
+  //* Eventos ---------------------------------------------------------------------------------------
   searchEvent: String = '';
 
   event: EventModel;
@@ -529,4 +533,6 @@ export class ControlPanelComponent implements OnInit {
       }
     });
   }
+
+  //* Reservaciones ---------------------------------------------------------------------------------------
 }

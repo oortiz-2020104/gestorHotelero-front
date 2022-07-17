@@ -10,11 +10,16 @@
             <button routerLink="/register" type="button" class="btn btn-lg btn-outline-light m-1"
                 style="width: 150px;">Registrarse</button>
         </p>
+        <hr class="w3-border-green" style="margin: auto;">
+        <p class="w3-large w3-center pt-2" *ngIf="!token">
+            <button routerLink="/no-register/viewHotels" type="button" class="btn btn-lg btn-outline-light m-1"
+                style="width: 200px;">Explorar hoteles</button>
+        </p>
 
         <p class="w3-large w3-center pt-2" *ngIf="token && userData.role == 'CLIENT'">
-            <button routerLink="" type="button" class="btn btn-lg btn-outline-light m-1"
+            <button routerLink="/viewHotels" type="button" class="btn btn-lg btn-outline-light m-1"
                 style="width: 150px;">Hoteles</button>
-            <button routerLink="" type="button" class="btn btn-lg btn-outline-light m-1" style="width: 175px;">Mi
+            <button routerLink="/myReserve" type="button" class="btn btn-lg btn-outline-light m-1" style="width: 175px;">Mi
                 reservación</button>
         </p>
 

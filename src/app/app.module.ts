@@ -19,6 +19,10 @@ import { SearchServicePipe } from './pipes/service/search-service.pipe';
 import { SearchEventPipe } from './pipes/event/search-event.pipe';
 import { SearchUserPipe } from './pipes/user/search-user.pipe';
 import { MyProfileComponent } from './components/my-profile/my-profile.component';
+import { ViewHotelsComponent } from './components/unregisteredUsers/view-hotels/view-hotels.component';
+import { ViewHotelsClientComponent } from './components/client/view-hotels-client/view-hotels-client.component';
+import { MyReserveComponent } from './components/client/my-reserve/my-reserve.component';
+import { SearchRoomUserPipe } from './pipes/room/search-room-user.pipe';
 
 @NgModule({
   declarations: [
@@ -36,7 +40,11 @@ import { MyProfileComponent } from './components/my-profile/my-profile.component
     SearchServicePipe,
     SearchEventPipe,
     SearchUserPipe,
-    MyProfileComponent
+    MyProfileComponent,
+    ViewHotelsComponent,
+    ViewHotelsClientComponent,
+    MyReserveComponent,
+    SearchRoomUserPipe
   ],
   imports: [
     BrowserModule,

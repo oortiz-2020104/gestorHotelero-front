@@ -14,6 +14,7 @@ export class ServiceRestService {
 
   constructor(private http: HttpClient, private userRest: UserRestService) {}
 
+  //* Administrador del hotel ---------------------------------------------------------------------------------------
   addService(params: {}) {
     return this.http.post(environment.baseUrl + 'service/addService', params, {
       headers: this.httpOptions,
@@ -59,6 +60,16 @@ export class ServiceRestService {
         idHotel +
         '/' +
         idService,
+      {
+        headers: this.httpOptions,
+      }
+    );
+  }
+
+  //* Clientes registrados ---------------------------------------------------------------------------------------
+  getServicesClient(idHotel: string) {
+    return this.http.get(
+      environment.baseUrl + 'service/getServices_Clients/' + idHotel,
       {
         headers: this.httpOptions,
       }

@@ -14,6 +14,7 @@ export class EventRestService {
 
   constructor(private http: HttpClient, private userRest: UserRestService) {}
 
+  //* Administrador del hotel ---------------------------------------------------------------------------------------
   addEvent(params: {}) {
     return this.http.post(environment.baseUrl + 'event/addEvent', params, {
       headers: this.httpOptions,
@@ -48,6 +49,16 @@ export class EventRestService {
   deleteEvent(idHotel: string, idEvent: string) {
     return this.http.delete(
       environment.baseUrl + 'event/deleteEvent/' + idHotel + '/' + idEvent,
+      {
+        headers: this.httpOptions,
+      }
+    );
+  }
+
+  //* Clientes registrados ---------------------------------------------------------------------------------------
+  getEventsClient(idHotel: string) {
+    return this.http.get(
+      environment.baseUrl + 'event/getEvents_Clients/' + idHotel,
       {
         headers: this.httpOptions,
       }

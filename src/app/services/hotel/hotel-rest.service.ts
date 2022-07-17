@@ -120,4 +120,20 @@ export class HotelRestService {
       xhr.send(formData);
     });
   }
+
+  //* Clientes no registrados ---------------------------------------------------------------------------------------
+  getHotelsUnregisteredUser() {
+    return this.http.get(environment.baseUrl + 'hotel/getHotels_NoClients', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
+  //* Clientes no registrados ---------------------------------------------------------------------------------------
+  getHotelsClient() {
+    return this.http.get(environment.baseUrl + 'hotel/getHotels_NoClients', {
+      headers: this.httpOptions,
+    });
+  }
 }
