@@ -24,4 +24,20 @@ export class ReservationRestService {
       }
     );
   }
+
+  myReserve() {
+    return this.http.get(environment.baseUrl + 'reservation/myReserve', {
+      headers: this.httpOptions,
+    });
+  }
+
+  addServiceMyReserve(params: {}, idService: string) {
+    return this.http.post(
+      environment.baseUrl + 'reservation/addServiceMyReserve/' + idService,
+      params,
+      {
+        headers: this.httpOptions,
+      }
+    );
+  }
 }

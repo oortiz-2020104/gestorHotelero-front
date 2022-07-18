@@ -130,10 +130,19 @@ export class HotelRestService {
     });
   }
 
-  //* Clientes no registrados ---------------------------------------------------------------------------------------
+  //* Clientes registrados ---------------------------------------------------------------------------------------
   getHotelsClient() {
-    return this.http.get(environment.baseUrl + 'hotel/getHotels_NoClients', {
+    return this.http.get(environment.baseUrl + 'hotel/getHotels_Clients', {
       headers: this.httpOptions,
     });
+  }
+
+  getHotelClient(hotelId: string) {
+    return this.http.get(
+      environment.baseUrl + 'hotel/getHotel_Clients/' + hotelId,
+      {
+        headers: this.httpOptions,
+      }
+    );
   }
 }

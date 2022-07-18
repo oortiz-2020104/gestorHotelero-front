@@ -3,7 +3,7 @@
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col col-lg-6 mb-4 mb-lg-0">
-                <div class="card mb-3 mt-4" style="border-radius: .5rem;">
+                <div class="card mb-3 mt-4 border border-dark" style="border-radius: .5rem;">
                     <div class="row g-0">
                         <div class="col-md-4 gradient-custom text-center text-dark"
                             style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
@@ -45,12 +45,13 @@
                                     </div>
                                 </div>
 
-                                <div *ngIf="userGetData.role == 'CLIENT' || userGetData.role == 'HOTELADMIN'">
+                                <div *ngIf="userGetData.role == 'CLIENT'">
                                     <h6>Historial</h6>
                                     <hr class="mt-0 mb-4">
                                     <div class="row pt-1">
                                         <div class="col-6 mb-3">
-                                            <button type="button" class="btn btn-primary btn-sm">Hoteles</button>
+                                            <button type="button" class="btn btn-primary m-1">Hoteles</button>
+                                            <button type="button" class="btn btn-primary m-1">Facturas</button>
                                         </div>
                                     </div>
                                 </div>

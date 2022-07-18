@@ -4,6 +4,7 @@ import { HotelRestService } from 'src/app/services/hotel/hotel-rest.service';
 import { RoomRestService } from 'src/app/services/room/room-rest.service';
 import { ServiceRestService } from 'src/app/services/service/service-rest.service';
 import { EventRestService } from 'src/app/services/event/event-rest.service';
+import { ReservationRestService } from 'src/app/services/reservation/reservation-rest.service';
 
 import { HotelModel } from 'src/app/models/hotel.model';
 import { RoomModel } from 'src/app/models/room.model';
@@ -21,7 +22,8 @@ export class ControlPanelComponent implements OnInit {
     private hotelRest: HotelRestService,
     private roomRest: RoomRestService,
     private serviceRest: ServiceRestService,
-    private eventRest: EventRestService
+    private eventRest: EventRestService,
+    private reservationRest: ReservationRestService
   ) {
     this.hotel = new HotelModel('', '', '', '', '');
     this.room = new RoomModel('', '', '', '', 0, false, '');
@@ -535,4 +537,7 @@ export class ControlPanelComponent implements OnInit {
   }
 
   //* Reservaciones ---------------------------------------------------------------------------------------
+  
+
+
 }
