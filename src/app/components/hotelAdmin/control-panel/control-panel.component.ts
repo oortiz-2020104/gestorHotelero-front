@@ -5,6 +5,7 @@ import { RoomRestService } from 'src/app/services/room/room-rest.service';
 import { ServiceRestService } from 'src/app/services/service/service-rest.service';
 import { EventRestService } from 'src/app/services/event/event-rest.service';
 import { ReservationRestService } from 'src/app/services/reservation/reservation-rest.service';
+import { BillRestService } from 'src/app/services/bill/bill-rest.service';
 
 import { HotelModel } from 'src/app/models/hotel.model';
 import { RoomModel } from 'src/app/models/room.model';
@@ -23,7 +24,8 @@ export class ControlPanelComponent implements OnInit {
     private roomRest: RoomRestService,
     private serviceRest: ServiceRestService,
     private eventRest: EventRestService,
-    private reservationRest: ReservationRestService
+    private reservationRest: ReservationRestService,
+    private billRest: BillRestService
   ) {
     this.hotel = new HotelModel('', '', '', '', '');
     this.room = new RoomModel('', '', '', '', 0, false, '');
@@ -34,6 +36,7 @@ export class ControlPanelComponent implements OnInit {
   ngOnInit(): void {
     this.getHotels();
     this.labelFilter = 'Habitaciones disponibles';
+    this.labelFilterReservation = 'En curso';
 
     this.today = new Date().toISOString().split('T')[0];
   }
@@ -537,7 +540,209 @@ export class ControlPanelComponent implements OnInit {
   }
 
   //* Reservaciones ---------------------------------------------------------------------------------------
-  
+  labelFilterReservation: any;
+  searchReservation: String = '';
 
+  reservations: any;
+  reservationGetData: any;
+  reservationGetId: any;
 
+  servicesReservation: any;
+
+  toggleSearchReservations() {
+    if (this.labelFilterReservation == 'En curso') {
+      this.getReservationsInProgress();
+      this.labelFilterReservation = 'Facturadas';
+    } else if (this.labelFilterReservation == 'Facturadas') {
+      this.getReservationsBilled();
+      this.labelFilterReservation = 'Canceladas';
+    } else if (this.labelFilterReservation == 'Canceladas') {
+      this.getReservationsCancelled();
+      this.labelFilterReservation = 'Canceladas y facturadas';
+    } else if (this.labelFilterReservation == 'Canceladas y facturadas') {
+      this.getReservationsCancelledAndBilled();
+      this.labelFilterReservation = 'Todas las reservaciones';
+    } else if (this.labelFilterReservation == 'Todas las reservaciones') {
+      this.getReservations(this.hotelGetId);
+      this.labelFilterReservation = 'En curso';
+    }
+  }
+
+  getReservations(idHotel: string) {
+    this.hotelGetId = idHotel;
+    this.labelFilterReservation = 'En curso';
+    this.reservationRest.getReservations(idHotel).subscribe({
+      next: (res: any) => {
+        this.reservations = res.reservations;
+      },
+      error: (err: any) => {
+        console.log(err.error.message);
+      },
+    });
+  }
+
+  getReservationsInProgress() {
+    this.reservationRest.getReservationsInProgress(this.hotelGetId).subscribe({
+      next: (res: any) => {
+        this.reservations = res.reservations;
+      },
+      error: (err: any) => {
+        console.log(err.error.message);
+      },
+    });
+  }
+
+  getReservationsBilled() {
+    this.reservationRest.getReservationsBilled(this.hotelGetId).subscribe({
+      next: (res: any) => {
+        this.reservations = res.reservations;
+      },
+      error: (err: any) => {
+        console.log(err.error.message);
+      },
+    });
+  }
+
+  getReservationsCancelled() {
+    this.reservationRest.getReservationsCancelled(this.hotelGetId).subscribe({
+      next: (res: any) => {
+        this.reservations = res.reservations;
+      },
+      error: (err: any) => {
+        console.log(err.error.message);
+      },
+    });
+  }
+
+  getReservationsCancelledAndBilled() {
+    this.reservationRest
+      .getReservationsCancelledAndBilled(this.hotelGetId)
+      .subscribe({
+        next: (res: any) => {
+          this.reservations = res.reservations;
+        },
+        error: (err: any) => {
+          console.log(err.error.message);
+        },
+      });
+  }
+
+  getReservation(idReservation: string) {
+    this.reservationGetId = idReservation;
+    this.reservationRest
+      .getReservation(this.hotelGetId, idReservation)
+      .subscribe({
+        next: (res: any) => {
+          this.reservationGetData = res.checkReservationHotel;
+          this.servicesReservation = res.services;
+        },
+        error: (err: any) => {
+          console.log(err.error.message);
+        },
+      });
+  }
+
+  cancelReservation(idReservation: string) {
+    Swal.fire({
+      title: '¿Estás seguro de cancelar esta reservación?',
+      text: '¡Esta acción no se puede revertir!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#aaa',
+      confirmButtonText: 'Sí, quiero cancelarla',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.reservationRest
+          .cancelReservation(this.hotelGetId, idReservation)
+          .subscribe({
+            next: (res: any) => {
+              Swal.fire({
+                icon: 'success',
+                title: res.message,
+              });
+              this.getReservations(this.hotelGetId);
+            },
+            error: (err: any) => {
+              Swal.fire({
+                icon: 'warning',
+                title: err.error.message || err.error,
+              });
+            },
+          });
+      }
+    });
+  }
+
+  checkInReservation(idReservation: string) {
+    Swal.fire({
+      title: '¿Estás seguro de facturar esta reservación?',
+      text: '¡Esta acción no se puede revertir!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#198754',
+      cancelButtonColor: '#aaa',
+      confirmButtonText: 'Sí, quiero facturarla',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.billRest
+          .checkInReservation(this.hotelGetId, idReservation)
+          .subscribe({
+            next: (res: any) => {
+              Swal.fire({
+                icon: 'success',
+                title: res.message,
+              });
+              this.getReservations(this.hotelGetId);
+            },
+            error: (err: any) => {
+              Swal.fire({
+                icon: 'warning',
+                title: err.error.message || err.error,
+              });
+            },
+          });
+      }
+    });
+  }
+
+  deleteServiceReservation(idServiceReservation: string) {
+    Swal.fire({
+      title: '¿Estás seguro de eliminar este servicio de la reservación?',
+      text: '¡Esta acción no se puede revertir!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#aaa',
+      confirmButtonText: 'Sí, quiero eliminarlo',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.reservationRest
+          .deleteServiceReservation(
+            this.hotelGetId,
+            this.reservationGetId,
+            idServiceReservation
+          )
+          .subscribe({
+            next: (res: any) => {
+              Swal.fire({
+                icon: 'success',
+                title: res.message,
+              });
+              this.getReservations(this.hotelGetId);
+              this.getReservation(this.reservationGetId);
+            },
+            error: (err: any) => {
+              Swal.fire({
+                icon: 'warning',
+                title: err.error.message || err.error,
+              });
+            },
+          });
+      }
+    });
+  }
 }

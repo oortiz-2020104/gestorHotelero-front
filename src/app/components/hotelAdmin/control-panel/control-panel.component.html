@@ -41,7 +41,8 @@
                     </div>
 
                     <div class="d-flex justify-content-center flex-wrap m-1">
-                        <button class="btn btn-secondary m-1 px-4 btn-sm">Reservaciones</button>
+                        <button (click)="getReservations(hotel._id)" class="btn btn-secondary m-1 px-4 btn-sm"
+                            data-bs-toggle="modal" data-bs-target="#modalGetReservations">Reservaciones</button>
                         <button class="btn btn-secondary m-1 px-4 btn-sm">Facturas</button>
                     </div>
 
@@ -199,8 +200,7 @@
                                 <td *ngIf="room.hasOwnProperty('currentUser') == false ">Libre</td>
                                 <td>
                                     <button (click)="getRoom(room._id)" class="btn btn-warning m-1"
-                                        data-bs-toggle="modal" data-bs-target="#modalGetRoom"
-                                        aria-controls="modalGetRoom">
+                                        data-bs-toggle="modal" data-bs-target="#modalGetRoom">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
                                     <button (click)="deleteRoom(room._id)" class="btn btn-danger m-1">
@@ -566,6 +566,133 @@
                             data-bs-target="#modalGetEvents">Actualizar cambios</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal get reservations -->
+<div class="modal fade" id="modalGetReservations" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reservaciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <button class="btn btn-secondary m-1" (click)="toggleSearchReservations()">
+                        {{ labelFilterReservation }}
+                    </button>
+
+                    <div class="mx-auto m-1" style="min-width: 115.7px; width: 15vw;">
+                        <input [(ngModel)]="searchReservation" type="text" class="form-control m-1"
+                            placeholder="Buscar cliente">
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="table-responsive-xxl">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">Fecha de inicio</th>
+                                <th scope="col">Fecha de final</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Cliente</th>
+                                <th scope="col">Habitación</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let reservation of reservations | searchReservationUser: searchReservation">
+                                <th>{{ reservation.startDate }}</th>
+                                <th>{{ reservation.endDate }}</th>
+                                <td>Q{{ reservation.totalPrice }}</td>
+                                <td *ngIf="reservation.state == 'En curso'" class="text-primary">{{ reservation.state }}
+                                </td>
+                                <td *ngIf="reservation.state == 'Facturada'" class="text-success">{{ reservation.state
+                                    }}</td>
+                                <td *ngIf="reservation.state == 'Cancelada'" class="text-warning">{{ reservation.state
+                                    }}</td>
+                                <td *ngIf="reservation.state == 'Cancelada y facturada'" class="text-danger">{{
+                                    reservation.state }}</td>
+                                <td>
+                                    {{ reservation.user.username + ' - ' }}
+                                    {{ reservation.user.name + ' ' + reservation.user.surname }}
+                                </td>
+                                <td>
+                                    {{ reservation.room.name + ' - Q' + reservation.room.price }}
+                                </td>
+                                <td>
+                                    <button (click)="getReservation(reservation._id)" data-bs-toggle="modal"
+                                        data-bs-target="#modalGetReservationDetails" class="btn btn-primary m-1"
+                                        title="Mas información">
+                                        <i class="fa-solid fa-circle-info"></i>
+                                    </button>
+                                    <button (click)="checkInReservation(reservation._id)"
+                                        *ngIf="reservation.state == 'En curso' || reservation.state == 'Cancelada'"
+                                        class="btn btn-success m-1" title="Facturar">
+                                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                                    </button>
+                                    <button (click)="cancelReservation(reservation._id)"
+                                        *ngIf="reservation.state == 'En curso'" class="btn btn-danger m-1"
+                                        title="Cancelar reservación">
+                                        <i class="fa-solid fa-circle-minus"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalGetReservationDetails" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalles de la reservación</h5>
+                <button type="button" class="btn-close" data-bs-toggle="modal"
+                    data-bs-target="#modalGetReservations"></button>
+            </div>
+            <div class="modal-body" *ngIf="reservationGetData">
+                <div class="row justify-content-center px-4">
+                    <div class="card m-2" style="width: 18rem;">
+                        <div class="card-body">
+                            <h4 class="card-title text-center">{{ reservationGetData.user.username }}</h4>
+                            <hr>
+                            <h5 class="card-title">{{ reservationGetData.user.name + ' ' +
+                                reservationGetData.user.surname }}</h5>
+                            <p class="card-subtitle mb-2">{{ reservationGetData.user.email }}</p>
+                            <p class="card-subtitle mb-2">
+                                {{ reservationGetData.user.phone }}</p>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row justify-content-center px-4">
+                    <div *ngFor="let serviceReservation of servicesReservation" class="card m-2" style="width: 18rem;">
+                        <div class="card-body">
+                            <h4 class="card-title text-center">{{ serviceReservation.service.name }}</h4>
+                            <hr>
+                            <h5 class="card-title">Q{{ serviceReservation.service.price }}</h5>
+                            <h5 class="card-title">Cantidad: {{ serviceReservation.quantity }}</h5>
+                            <p class="card-subtitle mb-2">{{ serviceReservation.service.description }}</p>
+
+                            <div class="btn-group d-flex" role="group">
+                                <button (click)="deleteServiceReservation(serviceReservation._id)"
+                                    *ngIf="reservationGetData.state == 'En curso'"
+                                    class="btn flex-grow-1 btn-danger">Quitar
+                                    servicio</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
