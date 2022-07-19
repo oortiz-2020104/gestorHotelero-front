@@ -36,6 +36,7 @@ export class ControlPanelComponent implements OnInit {
   ngOnInit(): void {
     this.getHotels();
     this.labelFilter = 'Habitaciones disponibles';
+    this.labelFilterHotels = 'Hoteles mas visitados';
     this.labelFilterReservation = 'En curso';
 
     this.today = new Date().toISOString().split('T')[0];
@@ -44,6 +45,7 @@ export class ControlPanelComponent implements OnInit {
   today: any;
 
   //* Hoteles ---------------------------------------------------------------------------------------
+  labelFilterHotels: any;
   searchHotel: String = '';
   hotelGetId: any;
   filesToUpload: any;
@@ -71,8 +73,29 @@ export class ControlPanelComponent implements OnInit {
     });
   }
 
+  toggleSearchHotels() {
+    if (this.labelFilterHotels == 'Hoteles mas visitados') {
+      this.getHotelsOrderByPopularity();
+      this.labelFilterHotels = 'Orden por defecto';
+    } else if (this.labelFilterHotels == 'Orden por defecto') {
+      this.getHotels();
+      this.labelFilterHotels = 'Hoteles mas visitados';
+    }
+  }
+
   getHotels() {
     this.hotelRest.getHotels().subscribe({
+      next: (res: any) => {
+        this.hotels = res.hotels;
+      },
+      error: (err: any) => {
+        console.log(err.error.message);
+      },
+    });
+  }
+
+  getHotelsOrderByPopularity() {
+    this.hotelRest.getHotelsOrderByPopularity().subscribe({
       next: (res: any) => {
         this.hotels = res.hotels;
       },
@@ -696,6 +719,7 @@ export class ControlPanelComponent implements OnInit {
                 title: res.message,
               });
               this.getReservations(this.hotelGetId);
+              this.getHotels()
             },
             error: (err: any) => {
               Swal.fire({
@@ -743,6 +767,38 @@ export class ControlPanelComponent implements OnInit {
             },
           });
       }
+    });
+  }
+
+  //* Facturas ---------------------------------------------------------------------------------------
+  bills: any;
+  billGetId: any;
+  billGetData: any;
+  servicesBill: any;
+  searchBill: string = '';
+
+  getBills(idHotel: string) {
+    this.hotelGetId = idHotel;
+    this.billRest.getBills(idHotel).subscribe({
+      next: (res: any) => {
+        this.bills = res.bills;
+      },
+      error: (err: any) => {
+        console.log(err.error.message);
+      },
+    });
+  }
+
+  getBill(idBill: string) {
+    this.billGetId = idBill;
+    this.billRest.getBill(this.hotelGetId, idBill).subscribe({
+      next: (res: any) => {
+        this.billGetData = res.bill;
+        this.servicesBill = res.services;
+      },
+      error: (err: any) => {
+        console.log(err.error.message);
+      },
     });
   }
 }

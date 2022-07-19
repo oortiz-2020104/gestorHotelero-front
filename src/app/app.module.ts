@@ -23,7 +23,8 @@ import { ViewHotelsComponent } from './components/unregisteredUsers/view-hotels/
 import { ViewHotelsClientComponent } from './components/client/view-hotels-client/view-hotels-client.component';
 import { MyReserveComponent } from './components/client/my-reserve/my-reserve.component';
 import { SearchRoomUserPipe } from './pipes/room/search-room-user.pipe';
-import { SearchReservationUserPipe } from './pipes/reservations/search-reservation-user.pipe';
+import { SearchReservationUserPipe } from './pipes/reservation/search-reservation-user.pipe';
+import { SearchBillUserPipe } from './pipes/bill/search-bill-user.pipe';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { SearchReservationUserPipe } from './pipes/reservations/search-reservati
     ViewHotelsClientComponent,
     MyReserveComponent,
     SearchRoomUserPipe,
-    SearchReservationUserPipe
+    SearchReservationUserPipe,
+    SearchBillUserPipe
   ],
   imports: [
     BrowserModule,

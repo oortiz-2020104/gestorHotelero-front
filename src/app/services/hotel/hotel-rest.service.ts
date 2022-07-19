@@ -31,6 +31,15 @@ export class HotelRestService {
     });
   }
 
+  getHotelsOrderByPopularityOnlyAdmin() {
+    return this.http.get(
+      environment.baseUrl + 'hotel/getHotels_OrderByPopularity_OnlyAdmin',
+      {
+        headers: this.httpOptions,
+      }
+    );
+  }
+
   getHotelOnlyAdmin(id: string) {
     return this.http.get(
       environment.baseUrl + 'hotel/getHotel_OnlyAdmin/' + id,
@@ -70,6 +79,15 @@ export class HotelRestService {
     return this.http.get(environment.baseUrl + 'hotel/getHotels', {
       headers: this.httpOptions,
     });
+  }
+
+  getHotelsOrderByPopularity() {
+    return this.http.get(
+      environment.baseUrl + 'hotel/getHotels_OrderByPopularity',
+      {
+        headers: this.httpOptions,
+      }
+    );
   }
 
   getHotel(id: string) {
@@ -133,6 +151,12 @@ export class HotelRestService {
   //* Clientes registrados ---------------------------------------------------------------------------------------
   getHotelsClient() {
     return this.http.get(environment.baseUrl + 'hotel/getHotels_Clients', {
+      headers: this.httpOptions,
+    });
+  }
+
+  getHotelsHistory() {
+    return this.http.get(environment.baseUrl + 'hotel/getHotelsHistory', {
       headers: this.httpOptions,
     });
   }

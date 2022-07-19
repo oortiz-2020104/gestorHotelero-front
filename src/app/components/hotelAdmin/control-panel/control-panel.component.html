@@ -2,6 +2,14 @@
 
 <div class="text-center m-3">
     <button class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#modalAddHotel">Agregar hotel</button>
+
+    <br>
+
+    <button (click)="toggleSearchHotels()" class="btn btn-secondary m-1">
+        {{ labelFilterHotels }}
+    </button>
+
+
     <div class="input-group mx-auto m-1" style="min-width: 115.7px; width: 15vw;">
         <input [(ngModel)]="searchHotel" type="text" class="form-control" placeholder="Buscar hotel"
             aria-describedby="btnSearch">
@@ -43,7 +51,8 @@
                     <div class="d-flex justify-content-center flex-wrap m-1">
                         <button (click)="getReservations(hotel._id)" class="btn btn-secondary m-1 px-4 btn-sm"
                             data-bs-toggle="modal" data-bs-target="#modalGetReservations">Reservaciones</button>
-                        <button class="btn btn-secondary m-1 px-4 btn-sm">Facturas</button>
+                        <button (click)="getBills(hotel._id)" class="btn btn-secondary m-1 px-4 btn-sm"
+                            data-bs-toggle="modal" data-bs-target="#modalGetBills">Facturas</button>
                     </div>
 
                     <div class="d-flex justify-content-center flex-wrap m-1">
@@ -652,6 +661,7 @@
     </div>
 </div>
 
+<!-- Modal get reservation -->
 <div class="modal fade" id="modalGetReservationDetails" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
         <div class="modal-content">
@@ -690,6 +700,112 @@
                                     class="btn flex-grow-1 btn-danger">Quitar
                                     servicio</button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal get bills -->
+<div class="modal fade" id="modalGetBills" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Facturas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="mx-auto m-1" style="min-width: 115.7px; width: 15vw;">
+                        <input [(ngModel)]="searchBill" type="text" class="form-control m-1"
+                            placeholder="Buscar cliente">
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="table-responsive-xxl">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">Fecha de creación</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Cliente</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Fecha de inicio</th>
+                                <th scope="col">Fecha de final</th>
+                                <th scope="col">Habitación</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let bill of bills | searchBillUser: searchBill">
+                                <th>{{ bill.date }}</th>
+                                <td>Q{{ bill.total }}</td>
+                                <td>
+                                    {{ bill.user.username + ' - ' }}
+                                    {{ bill.user.name + ' ' + bill.user.surname }}
+                                </td>
+                                <td *ngIf="bill.reservation.state == 'Facturada'" class="text-success">
+                                    {{ bill.reservation.state }}
+                                </td>
+                                <td *ngIf="bill.reservation.state == 'Cancelada y facturada'" class="text-danger">
+                                    {{ bill.reservation.state }}
+                                </td>
+                                <td>{{ bill.reservation.startDate }}</td>
+                                <td>{{ bill.reservation.endDate }}</td>
+                                <td>
+                                    {{ bill.reservation.room.name + ' - Q' + bill.reservation.room.price }}
+                                </td>
+                                <td>
+                                    <button (click)="getBill(bill._id)" data-bs-toggle="modal"
+                                        data-bs-target="#modalGetBillDetails" class="btn btn-primary m-1"
+                                        title="Mas información">
+                                        <i class="fa-solid fa-circle-info"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal get reservation -->
+<div class="modal fade" id="modalGetBillDetails" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalles de la factura</h5>
+                <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#modalGetBills"></button>
+            </div>
+            <div class="modal-body" *ngIf="billGetData">
+                <div class="row justify-content-center px-4">
+                    <div class="card m-2" style="width: 18rem;">
+                        <div class="card-body">
+                            <h4 class="card-title text-center">{{ billGetData.user.username }}</h4>
+                            <hr>
+                            <h5 class="card-title">{{ billGetData.user.name + ' ' +
+                                billGetData.user.surname }}</h5>
+                            <p class="card-subtitle mb-2">{{ billGetData.user.email }}</p>
+                            <p class="card-subtitle mb-2">
+                                {{ billGetData.user.phone }}</p>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row justify-content-center px-4">
+                    <div *ngFor="let serviceBill of servicesBill" class="card m-2" style="width: 18rem;">
+                        <div class="card-body">
+                            <h4 class="card-title text-center">{{ serviceBill.service.name }}</h4>
+                            <hr>
+                            <h5 class="card-title">Q{{ serviceBill.service.price }}</h5>
+                            <h5 class="card-title">Cantidad: {{ serviceBill.quantity }}</h5>
+                            <p class="card-subtitle mb-2">{{ serviceBill.service.description }}</p>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { BillRestService } from 'src/app/services/bill/bill-rest.service';
+
+import { HotelRestService } from 'src/app/services/hotel/hotel-rest.service';
 import { UserRestService } from 'src/app/services/user/user-rest.service';
+
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 
@@ -9,7 +13,11 @@ import Swal from 'sweetalert2';
   styleUrls: ['./my-profile.component.css'],
 })
 export class MyProfileComponent implements OnInit {
-  constructor(private userRest: UserRestService) {}
+  constructor(
+    private userRest: UserRestService,
+    private hotelRest: HotelRestService,
+    private billRest: BillRestService
+  ) {}
 
   ngOnInit(): void {
     this.myProfile();
@@ -139,6 +147,34 @@ export class MyProfileComponent implements OnInit {
         });
         localStorage.clear();
       }
+    });
+  }
+
+  //* Hoteles ---------------------------------------------------------------------------------------
+  hotels: any;
+
+  getHotelsHistory() {
+    this.hotelRest.getHotelsHistory().subscribe({
+      next: (res: any) => {
+        this.hotels = res.hotels;
+      },
+      error: (err: any) => {
+        console.log(err.error.message);
+      },
+    });
+  }
+
+  //* Hoteles ---------------------------------------------------------------------------------------
+  bills: any;
+
+  getBillsHistory() {
+    this.billRest.myBills().subscribe({
+      next: (res: any) => {
+        this.bills = res.bills;
+      },
+      error: (err: any) => {
+        console.log(err.error.message);
+      },
     });
   }
 }

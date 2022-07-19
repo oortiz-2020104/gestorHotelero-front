@@ -14,11 +14,39 @@ export class BillRestService {
 
   constructor(private http: HttpClient, private userRest: UserRestService) {}
 
+  //* Administrador del hotel ---------------------------------------------------------------------------------------
   checkInReservation(idHotel: string, idReservation: string) {
-    return this.http.get(environment.baseUrl + 'bill/checkInReservation/' + idHotel + '/' + idReservation,
+    return this.http.get(
+      environment.baseUrl +
+        'bill/checkInReservation/' +
+        idHotel +
+        '/' +
+        idReservation,
       {
         headers: this.httpOptions,
       }
     );
+  }
+
+  getBills(idHotel: string) {
+    return this.http.get(environment.baseUrl + 'bill/getBills/' + idHotel, {
+      headers: this.httpOptions,
+    });
+  }
+
+  getBill(idHotel: string, idBill: string) {
+    return this.http.get(
+      environment.baseUrl + 'bill/getBill/' + idHotel + '/' + idBill,
+      {
+        headers: this.httpOptions,
+      }
+    );
+  }
+
+  //* Usuario registrado ---------------------------------------------------------------------------------------
+  myBills() {
+    return this.http.get(environment.baseUrl + 'bill/myBills', {
+      headers: this.httpOptions,
+    });
   }
 }

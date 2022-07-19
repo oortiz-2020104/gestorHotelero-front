@@ -22,6 +22,7 @@ export class HotelsComponent implements OnInit {
   ngOnInit(): void {
     this.getHotelsOnlyAdmin();
     this.getUsersHotelAdmin();
+    this.labelFilter = 'Hoteles mas visitados'
   }
 
   searchHotel: String = '';
@@ -32,6 +33,8 @@ export class HotelsComponent implements OnInit {
   hotel: HotelModel;
   hotels: any;
   hotelGetData: any;
+
+  labelFilter: any;
 
   getUsersHotelAdmin() {
     this.userRest.getUsersHotelAdmin().subscribe({
@@ -63,8 +66,29 @@ export class HotelsComponent implements OnInit {
     });
   }
 
+  toggleSearchHotels() {
+    if (this.labelFilter == 'Hoteles mas visitados') {
+      this.getHotelsOrderByPopularityOnlyAdmin();
+      this.labelFilter = 'Orden por defecto';
+    } else if (this.labelFilter == 'Orden por defecto') {
+      this.getHotelsOnlyAdmin();
+      this.labelFilter = 'Hoteles mas visitados';
+    }
+  }
+
   getHotelsOnlyAdmin() {
     this.hotelRest.getHotelsOnlyAdmin().subscribe({
+      next: (res: any) => {
+        this.hotels = res.hotels;
+      },
+      error: (err: any) => {
+        console.log(err.error.message);
+      },
+    });
+  }
+
+  getHotelsOrderByPopularityOnlyAdmin() {
+    this.hotelRest.getHotelsOrderByPopularityOnlyAdmin().subscribe({
       next: (res: any) => {
         this.hotels = res.hotels;
       },

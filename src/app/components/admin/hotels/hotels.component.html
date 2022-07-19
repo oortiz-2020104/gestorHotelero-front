@@ -1,6 +1,13 @@
 <app-navbar></app-navbar>
 <div class="text-center m-3">
     <button class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#modalAddHotel">Agregar hotel</button>
+
+    <br>
+
+    <button (click)="toggleSearchHotels()" class="btn btn-secondary m-1">
+        {{ labelFilter }}
+    </button>
+
     <div class="input-group mx-auto m-1" style="min-width: 115.7px; width: 15vw;">
         <input [(ngModel)]="searchHotel" type="text" class="form-control" placeholder="Buscar hotel"
             aria-describedby="btnSearch">

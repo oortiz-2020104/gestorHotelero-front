@@ -50,8 +50,12 @@
                                     <hr class="mt-0 mb-4">
                                     <div class="row pt-1">
                                         <div class="col-6 mb-3">
-                                            <button type="button" class="btn btn-primary m-1">Hoteles</button>
-                                            <button type="button" class="btn btn-primary m-1">Facturas</button>
+                                            <button (click)="getHotelsHistory()" data-bs-toggle="modal"
+                                                data-bs-target="#modalHistoryHotels" type="button"
+                                                class="btn btn-primary m-1">Hoteles</button>
+                                            <button (click)="getBillsHistory()" data-bs-toggle="modal"
+                                                data-bs-target="#modalBills" type="button"
+                                                class="btn btn-primary m-1">Facturas</button>
                                         </div>
                                     </div>
                                 </div>
@@ -63,6 +67,68 @@
         </div>
     </div>
 </section>
+
+<!-- Modal history hotels-->
+<div class="modal fade" id="modalHistoryHotels" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Historial de hoteles</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex flex-column">
+                    <div *ngFor="let hotel of hotels" class="card mb-3 mx-auto" style="max-width: 60%;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img *ngIf="hotel.hasOwnProperty('image') == false"
+                                    src="../../../../assets/dummy_2000x1500_ffffff_cccccc_-no-image.jpg"
+                                    class="img-fluid rounded">
+                                <img *ngIf="hotel.image"
+                                    src="http://localhost:3200/hotel/getImageHotel/{{ hotel.image }}"
+                                    crossorigin="anonymous" class="img-fluid rounded" style="height: 100%;">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title h2 mb-0">{{ hotel.name }}</h5>
+                                    <div class="card-text"> Teléfono: {{ hotel.phone }}</div>
+                                    <div class="card-text">Dirección: {{ hotel.address }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal history hotels-->
+<div class="modal fade" id="modalBills" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Facturas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center px-4">
+                    <div *ngFor="let bill of bills" class="card m-2" style="max-width: 30rem; min-width: 18rem;">
+                        <div class="card-body">
+                            <h4 class="card-title text-center">{{ bill.hotel.name }}</h4>
+                            <hr>
+                            <h5 class="card-title">Q{{ bill.total }}</h5>
+                            <p class="card-subtitle mb-2"><strong>Facturado el:</strong> {{ bill.date }}</p>
+                            <p class="card-subtitle mb-2"><strong>Reservado: </strong>{{ bill.reservation.startDate + ' al ' + bill.reservation.endDate }}</p>
+                            <p class="card-subtitle mb-2">{{ bill.reservation.state }}</p>
+                            <p class="card-subtitle mb-2">{{ bill.reservation.room.name + ' - Q' + bill.reservation.room.price }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal upload image-->
 <div class="modal fade" id="modalUploadImage" tabindex="-1" aria-hidden="true">
