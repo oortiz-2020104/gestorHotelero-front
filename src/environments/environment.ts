@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost:3200/'
+  baseUrl: 'https://gestor-hotelero-osmar-ortiz.herokuapp.com/'
 };
 
 /*
